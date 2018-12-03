@@ -1,7 +1,7 @@
 # Customized #
 ###################
 node_modules\
-config.json
+config.js
 
 # Compiled source #
 ###################
