@@ -1,6 +1,10 @@
 'use strict';
 
-const { TWILIO_AUTH_TOKEN, TWILIO_ACCOUNT_SID } = require('./config');
+const {
+  TWILIO_AUTH_TOKEN,
+  TWILIO_ACCOUNT_SID,
+  TWILIO_INC_NUM_LIST
+} = require('./config');
 
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -16,10 +20,19 @@ app.get('/', (req, res) => {
 
 app.post('/', (req, res) => {
   const twiml = new MessagingResponse();
-
-  console.log(req.body.Body);
-  twiml.message(req.body.Body);
-
+  const user = TWILIO_INC_NUM_LIST.filter(el => el.resource === req.body.From);
+  
+  if (user) {
+    twiml.message(
+      `Hi ${user[0].userName}! Thanks for your message, you sent: ${
+        req.body.Body
+      }`
+    );
+  } else {
+    twiml.message(
+      `Hi ${req.body.From}! Thanks for your message, you sent: ${req.body.Body}`
+    );
+  }
   res.writeHead(200, { 'Content-Type': 'text/xml' });
   res.end(twiml.toString());
 });
