@@ -1,27 +1,32 @@
 'use strict';
 const cors = require('cors');
-
-const {
-  TWILIO_AUTH_TOKEN,
-  TWILIO_ACCOUNT_SID,
-  TWILIO_INC_NUM_LIST
-} = require('./config');
-
+const _ = require('lodash');
+const mongoose = require('mongoose');
 const express = require('express');
 const bodyParser = require('body-parser');
 const axios = require('axios');
+const MessagingResponse = require('twilio').twiml.MessagingResponse;
+const { User } = require('./models/user');
+const { Message } = require('./models/message');
+const {
+  TWILIO_AUTH_TOKEN,
+  TWILIO_ACCOUNT_SID,
+  TWILIO_INC_NUM_LIST,
+  TWILIO_DB_STR,
+  TWILIO_FE_URL
+} = require('./config');
+
 const app = express();
 const port = process.env.PORT || 5000;
-const MessagingResponse = require('twilio').twiml.MessagingResponse;
 
-const url = 'http://www.theblackdog.net/insecure.htm';
+const scrapingURL = 'http://www.theblackdog.net/insecure.htm';
 app.locals.parsedQuotes = [];
 app.locals.whatsAppMsg = {};
 
 const parseQuotes = async url => {
   let html;
   try {
-    const response = await axios.get(url);
+    const response = await axios.get(scrapingURL);
     html = response.data;
   } catch (error) {
     console.error(error);
@@ -49,48 +54,107 @@ function getRandomAdvice(parsedQuotes) {
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cors());
 
-app.get('/', (req, res) => {
-  res.writeHead(200, { 'Content-Type': 'application/json' });
-  // res.write(JSON.stringify(app.locals.parsedQuotes));
+mongoose
+  .connect(TWILIO_DB_STR)
+  .then(() => console.log(`Connected to Twilio DB`));
+
+// app.get('/', (req, res) => {
+//   res.writeHead(200, { 'Content-Type': 'application/json' });
+
+//   const response =
+//     app.locals.whatsAppMsg === {}
+//       ? {}
+//       : {
+//           advice: app.locals.parsedQuotes,
+//           user: app.locals.whatsAppMsg.user,
+//           resource: app.locals.whatsAppMsg.resource,
+//           message: app.locals.whatsAppMsg.message
+//         };
+//   res.send(JSON.stringify(response));
+//   res.end();
+// });
+
+app.get('/:id', async (req, res) => {
+  const message = await Message.findOne({ uid: req.params.id });
+  const user = await User.findOne({ _id: req.params.id });
+
   const response =
-    app.locals.whatsAppMsg === {}
-      ? {}
-      : {
+    user && message
+      ? {
           advice: app.locals.parsedQuotes,
-          user: app.locals.whatsAppMsg.user,
-          resource: app.locals.whatsAppMsg.resource,
-          message: app.locals.whatsAppMsg.message
-        };
-  console.log(response);
-  res.write(JSON.stringify(response));
+          user: user.name,
+          resource: user.resource,
+          message: message.messages
+        }
+      : {};
+
+  res.send(JSON.stringify(response));
   res.end();
 });
 
-app.post('/', (req, res) => {
+app.post('/', async (req, res) => {
+  //---------DB-----------------//
+  let dbUser;
+  let dbMessage;
+
+  try {
+    dbUser = await User.findOne({ resource: req.body.From });
+  } catch (error) {
+    console.log(error);
+  }
+  if (!dbUser) {
+    dbUser = new User({ name: req.body.From, resource: req.body.From });
+    console.log(dbUser);
+    await dbUser.save();
+  }
+
+  try {
+    console.log(dbUser._id);
+    dbMessage = await Message.findOne({ uid: dbUser._id });
+  } catch (error) {
+    console.log(error);
+  }
+  if (!dbMessage) {
+    dbMessage = new Message({
+      uid: dbUser._id,
+      messages: [...[], req.body.Body]
+    });
+
+    console.log(dbMessage);
+    await dbMessage.save();
+  } else {
+    dbMessage = await Message.findOneAndUpdate(
+      { uid: dbUser._id },
+      {
+        messages: [...dbMessage.messages, req.body.Body]
+      },
+      { new: true }
+    );
+    console.log(dbMessage);
+  }
+
+  //--------TWIML---------------//
+
   const twiml = new MessagingResponse();
   const user = TWILIO_INC_NUM_LIST.filter(el => el.resource === req.body.From);
   let response = '';
   const message = req.body.Body;
   const userName = user ? user[0].userName : req.body.From;
 
-  if (
-    message &&
-    (message.includes('עצה') || message.toLowerCase().includes('advice'))
-  ) {
-    response = `Hi ${userName}!\n Always remember:\n ${getRandomAdvice(
-      app.locals.parsedQuotes
-    )}`;
+  if (message) {
+    response = `Hi ${userName}!
+    Thanks for your message, you can find your messages history under:
+    http:// localhost:3000/${dbUser._id}
+    In addition here's a random advice for free:
+    ${getRandomAdvice(app.locals.parsedQuotes)}`;
     app.locals.whatsAppMsg.resource = user[0].resource;
-  } else {
-    response = `Hi ${userName}! Thanks for your message, you sent: ${
-      req.body.Body
-    }`;
   }
+
   app.locals.whatsAppMsg = {
     ...app.locals.whatsAppMsg,
     ...{ user: userName, message: message }
   };
-
+  console.log(response);
   twiml.message(response);
   res.writeHead(200, { 'Content-Type': 'text/xml' });
   res.end(twiml.toString());
@@ -98,20 +162,5 @@ app.post('/', (req, res) => {
 
 app.listen(port, async function() {
   console.log(`Server listening on port ${port}`);
-  app.locals.parsedQuotes = await parseQuotes(url);
+  app.locals.parsedQuotes = await parseQuotes(scrapingURL);
 });
-
-// Download the helper library from https://www.twilio.com/docs/node/install
-// Your Account Sid and Auth Token from twilio.com/console
-const accountSid = TWILIO_ACCOUNT_SID;
-const authToken = TWILIO_AUTH_TOKEN;
-const client = require('twilio')(accountSid, authToken);
-
-// client.messages
-//   .create({
-//     body: 'Hello there!',
-//     from: 'whatsapp:XXXXXXXXX',
-//     to: 'whatsapp:XXXXXXXXX'
-//   })
-//   .then(message => console.log(message.sid))
-//   .done();
