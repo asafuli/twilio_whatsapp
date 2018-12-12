@@ -7,5 +7,5 @@ module.exports = {
     { resource: 'whatsapp:+972546417485', userName: 'Nora' },
     { resource: 'whatsapp:+972546094329', userName: 'Michal' }
   ],
-  TWILIO_FE_URL: 'http://the-black-forest-x.herokuapp.com'
+  TWILIO_FE_URL: 'http://the-black-forest-x-fe.herokuapp.com'
 };
