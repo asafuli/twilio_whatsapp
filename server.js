@@ -14,7 +14,7 @@ const {
   TWILIO_INC_NUM_LIST,
   TWILIO_DB_STR,
   TWILIO_FE_URL
-} = require('./config.js');
+} = require('./config/config');
 
 const app = express();
 const port = process.env.PORT || 5000;
