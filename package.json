@@ -2,11 +2,9 @@
   "name": "twilio_whatsapp",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "start": "node server.js",
-    "dev": "nodemon server.js",
-    "ngrok": "ngrok http 5000"
+    "start": "node server.js"
   },
   "author": "",
   "license": "ISC",
