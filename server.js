@@ -74,15 +74,17 @@ mongoose
 //   res.end();
 // });
 
-app.get('/:id', async (req, res) => {
+app.get('/user/:id', async (req, res) => {
   const message = await Message.findOne({ uid: req.params.id });
   const user = await User.findOne({ _id: req.params.id });
-
+  const knownUser = TWILIO_INC_NUM_LIST.filter(
+    el => el.resource === user.resource
+  );
   const response =
     user && message
       ? {
-          advice: app.locals.parsedQuotes,
-          user: user.name,
+          advice: getRandomAdvice(app.locals.parsedQuotes),
+          user: knownUser ? knownUser[0].userName : user.name,
           resource: user.resource,
           message: message.messages
         }
@@ -136,18 +138,20 @@ app.post('/', async (req, res) => {
   //--------TWIML---------------//
 
   const twiml = new MessagingResponse();
-  const user = TWILIO_INC_NUM_LIST.filter(el => el.resource === req.body.From);
   let response = '';
   const message = req.body.Body;
-  const userName = user ? user[0].userName : req.body.From;
+  const knownUser = TWILIO_INC_NUM_LIST.filter(
+    el => el.resource === req.body.From
+  );
+  const userName = knownUser ? knownUser[0].userName : req.body.From;
 
   if (message) {
     response = `Hi ${userName}!
     Thanks for your message, you can find your messages history under:
-    http:// localhost:3000/${dbUser._id}
+    ${TWILIO_FE_URL}/user/${dbUser._id}
     In addition here's a random advice for free:
     ${getRandomAdvice(app.locals.parsedQuotes)}`;
-    app.locals.whatsAppMsg.resource = user[0].resource;
+    app.locals.whatsAppMsg.resource = knownUser[0].resource;
   }
 
   app.locals.whatsAppMsg = {
