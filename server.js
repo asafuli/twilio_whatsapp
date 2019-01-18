@@ -58,21 +58,6 @@ mongoose
   .connect(TWILIO_DB_STR)
   .then(() => console.log(`Connected to Twilio DB`));
 
-// app.get('/', (req, res) => {
-//   res.writeHead(200, { 'Content-Type': 'application/json' });
-
-//   const response =
-//     app.locals.whatsAppMsg === {}
-//       ? {}
-//       : {
-//           advice: app.locals.parsedQuotes,
-//           user: app.locals.whatsAppMsg.user,
-//           resource: app.locals.whatsAppMsg.resource,
-//           message: app.locals.whatsAppMsg.message
-//         };
-//   res.send(JSON.stringify(response));
-//   res.end();
-// });
 
 app.get('/user/:id', async (req, res) => {
   const message = await Message.findOne({ uid: req.params.id });
