@@ -13,9 +13,14 @@ const app = express();
 const port = process.env.PORT || 5000;
 app.locals.parsedQuotes = [];
 app.locals.whatsAppMsg = {};
+let corsOptions = {
+  credentials: true,
+  origin: true
+};
 
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cors());
+app.use(cors(corsOptions));
+//app.use(cors());
 require('./startup/routes')(app);
 require('./startup/db')();
 
