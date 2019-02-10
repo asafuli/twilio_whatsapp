@@ -1,63 +1,23 @@
 'use strict';
 const cors = require('cors');
 const _ = require('lodash');
-const mongoose = require('mongoose');
 const express = require('express');
 const bodyParser = require('body-parser');
-const axios = require('axios');
 const MessagingResponse = require('twilio').twiml.MessagingResponse;
+const scraper = require('./utils/scrapingUtils');
 const { User } = require('./models/user');
 const { Message } = require('./models/message');
-const {
-  TWILIO_AUTH_TOKEN,
-  TWILIO_ACCOUNT_SID,
-  TWILIO_INC_NUM_LIST,
-  TWILIO_DB_STR,
-  TWILIO_FE_URL
-} = require('./config/config');
+const { TWILIO_INC_NUM_LIST, TWILIO_FE_URL } = require('./config/config');
 
 const app = express();
 const port = process.env.PORT || 5000;
-
-const scrapingURL = 'http://www.theblackdog.net/insecure.htm';
 app.locals.parsedQuotes = [];
 app.locals.whatsAppMsg = {};
 
-const parseQuotes = async url => {
-  let html;
-  try {
-    const response = await axios.get(scrapingURL);
-    html = response.data;
-  } catch (error) {
-    console.error(error);
-  }
-
-  let quotes = html.slice(
-    html.indexOf('quoteArray[0]'),
-    html.indexOf('quoteArray[42]')
-  );
-
-  let regex = /quoteArray\[[0-9]\]=|quoteArray\[[1-4][0-9]\]=/g;
-  quotes = quotes
-    .replace(regex, '')
-    .split('\n')
-    .filter(el => el.length > 0);
-  return quotes;
-};
-
-function getRandomAdvice(parsedQuotes) {
-  return parsedQuotes[Math.ceil(Math.random() * parsedQuotes.length) - 1];
-}
-
-//------------Server start----------------------//
-
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cors());
-
-mongoose
-  .connect(TWILIO_DB_STR)
-  .then(() => console.log(`Connected to Twilio DB`));
-
+require('./startup/routes')(app);
+require('./startup/db')();
 
 app.get('/user/:id', async (req, res) => {
   const message = await Message.findOne({ uid: req.params.id });
@@ -68,7 +28,7 @@ app.get('/user/:id', async (req, res) => {
   const response =
     user && message
       ? {
-          advice: getRandomAdvice(app.locals.parsedQuotes),
+          advice: scraper.getRandomAdvice(app.locals.parsedQuotes),
           user: knownUser ? knownUser[0].userName : user.name,
           resource: user.resource,
           message: message.messages
@@ -135,7 +95,7 @@ app.post('/', async (req, res) => {
     Thanks for your message, you can find your messages history under:
     ${TWILIO_FE_URL}/user/${dbUser._id}
     In addition here's a random advice for free:
-    ${getRandomAdvice(app.locals.parsedQuotes)}`;
+    ${scraper.getRandomAdvice(app.locals.parsedQuotes)}`;
     app.locals.whatsAppMsg.resource = knownUser[0].resource;
   }
 
@@ -151,5 +111,5 @@ app.post('/', async (req, res) => {
 
 app.listen(port, async function() {
   console.log(`Server listening on port ${port}`);
-  app.locals.parsedQuotes = await parseQuotes(scrapingURL);
+  app.locals.parsedQuotes = await scraper.parseQuotes(scrapingURL);
 });
