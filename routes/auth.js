@@ -12,7 +12,8 @@ router.options(
   }),
   (req, res) => {
     console.log('----received OPTIONS', req);
-    res.sendStatus(200);
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.status(200).json('OK');
   }
 );
 router.post('/auth', async (req, res) => {
