@@ -12,7 +12,10 @@ router.options(
   }),
   (req, res) => {
     console.log('----received OPTIONS', req);
-    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader(
+      'Access-Control-Allow-Origin',
+      'https://the-black-forest-x-fe.herokuapp.com/auth'
+    );
     res.status(200).json('OK');
   }
 );
