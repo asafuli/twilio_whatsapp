@@ -9,7 +9,7 @@ router.post('/auth', async (req, res) => {
   //   dbUser = new User(_.pick(req.body, ['From', 'req.body.From']));
   //   await dbUser.save();
   // }
-  console.log('received request', req);
+  console.log('----received request', req);
   res.sendStatus(200);
 });
 
