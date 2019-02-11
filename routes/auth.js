@@ -4,21 +4,26 @@ const { User } = require('../models/user');
 const express = require('express');
 const router = express.Router();
 
-router.options(
-  '/auth',
-  cors({
-    credentials: true,
-    origin: true
-  }),
-  (req, res) => {
-    console.log('----received OPTIONS', req);
-    res.setHeader(
-      'Access-Control-Allow-Origin',
-      'https://the-black-forest-x-fe.herokuapp.com/auth'
-    );
-    res.status(200).json('OK');
-  }
-);
+// router.use(async (req, res, next) => {
+//   await next();
+//   res.setHeader('Access-Control-Allow-Origin', '*');
+// });
+
+// router.options(
+//   '/auth',
+//   cors({
+//     credentials: true,
+//     origin: true
+//   }),
+//   (req, res) => {
+//     console.log('----received OPTIONS', req);
+//     res.setHeader(
+//       'Access-Control-Allow-Origin',
+//       'https://the-black-forest-x-fe.herokuapp.com/auth'
+//     );
+//     res.status(200).json('OK');
+//   }
+// );
 router.post('/auth', async (req, res) => {
   // let dbUser = await User.findOne({ resource: req.body.From });
   // if (!dbUser) {

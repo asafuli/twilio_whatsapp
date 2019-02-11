@@ -19,6 +19,10 @@ let corsOptions = {
 };
 
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(async (req, res, next) => {
+  await next();
+  res.setHeader('Access-Control-Allow-Origin', '*');
+});
 app.use(cors(corsOptions));
 //app.use(cors());
 require('./startup/routes')(app);
