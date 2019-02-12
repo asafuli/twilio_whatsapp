@@ -13,7 +13,7 @@ router.use(async (req, res, next) => {
 });
 
 router.options(
-  '/auth',
+  '/',
   cors({
     credentials: true,
     origin: true
@@ -28,7 +28,7 @@ router.options(
   }
 );
 
-router.post('/auth', async (req, res) => {
+router.post('/', async (req, res) => {
   // let dbUser = await User.findOne({ resource: req.body.From });
   // if (!dbUser) {
   //   dbUser = new User(_.pick(req.body, ['From', 'req.body.From']));
