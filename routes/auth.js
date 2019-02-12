@@ -9,7 +9,11 @@ router.post('/', async (req, res) => {
   let dbUser = await User.findOneAndUpdate(
     { resource },
     { $set: { email, password } },
-    { new: true }
+    { new: true },
+    (err, doc) => {
+      if (err) console.log(err);
+      console.log(doc);
+    }
   );
   if (!dbUser) {
     // dbUser = new User(_.pick(req.body, ['From', 'req.body.From']));
