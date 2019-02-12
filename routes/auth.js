@@ -4,14 +4,20 @@ const { User } = require('../models/user');
 const express = require('express');
 const router = express.Router();
 
-router.post('/', (req, res) => {
-  // let dbUser = await User.findOne({ resource: req.body. });
-  // if (!dbUser) {
-  //   dbUser = new User(_.pick(req.body, ['From', 'req.body.From']));
-  //   await dbUser.save();
-  // }
+router.post('/', async (req, res) => {
+  const { email, password, resource } = req.body;
+  let dbUser = await User.findOneAndUpdate(
+    { resource },
+    { $set: { email, password } },
+    { new: true }
+  );
+  if (!dbUser) {
+    // dbUser = new User(_.pick(req.body, ['From', 'req.body.From']));
+    // await dbUser.save();
+    res.status(400).send('Resource not found in DB', resource);
+  }
   console.log('----received request', req.body);
-  res.send(req.body.resource);
+  res.send(resource);
 });
 
 module.exports = router;
