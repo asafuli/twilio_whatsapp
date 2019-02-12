@@ -17,7 +17,7 @@ router.post('/', async (req, res) => {
     res.status(400).send('Resource not found in DB', resource);
   }
   console.log('----received request', req.body);
-  res.send(db.User);
+  res.send(dbUser);
 });
 
 module.exports = router;
