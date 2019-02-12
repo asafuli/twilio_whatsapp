@@ -18,7 +18,7 @@ let corsOptions = {
   origin: true
 };
 
-app.use(bodyParser.urlencoded({ extended: false }));\
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 // app.use(async (req, res, next) => {
 //   await next();
