@@ -4,29 +4,10 @@ const { User } = require('../models/user');
 const express = require('express');
 const router = express.Router();
 
-router.use(async (req, res, next) => {
-  await next();
-  res.setHeader(
-    'Access-Control-Allow-Origin',
-    'https://the-black-forest-x-be.herokuapp.com/auth'
-  );
+router.options('/', (req, res) => {
+  console.log('----received OPTIONS', req);
+  res.status(200).json('OK');
 });
-
-router.options(
-  '/',
-  cors({
-    credentials: true,
-    origin: true
-  }),
-  (req, res) => {
-    console.log('----received OPTIONS', req);
-    res.setHeader(
-      'Access-Control-Allow-Origin',
-      'https://the-black-forest-x-fe.herokuapp.com/auth'
-    );
-    res.status(200).json('OK');
-  }
-);
 
 router.post('/', async (req, res) => {
   // let dbUser = await User.findOne({ resource: req.body.From });
@@ -35,7 +16,7 @@ router.post('/', async (req, res) => {
   //   await dbUser.save();
   // }
   console.log('----received request', req);
-  res.sendStatus(200);
+  res.sendStatus(200).send(req.body.email);
 });
 
 module.exports = router;
