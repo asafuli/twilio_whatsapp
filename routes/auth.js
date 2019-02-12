@@ -6,17 +6,16 @@ const router = express.Router();
 
 router.options('/', (req, res) => {
   console.log('----received OPTIONS', req);
-  res.status(200).json('OK');
 });
 
-router.post('/', async (req, res) => {
+router.post('/', (req, res) => {
   // let dbUser = await User.findOne({ resource: req.body.From });
   // if (!dbUser) {
   //   dbUser = new User(_.pick(req.body, ['From', 'req.body.From']));
   //   await dbUser.save();
   // }
   console.log('----received request', req.body);
-  res.sendStatus(200).send(req.body.email);
+  res.sendStatus(200).send(req.email);
 });
 
 module.exports = router;
