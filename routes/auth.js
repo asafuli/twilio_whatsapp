@@ -11,7 +11,7 @@ router.post('/', (req, res) => {
   //   await dbUser.save();
   // }
   console.log('----received request', req.body);
-  res.sendStatus(200).send(req.body.email);
+  res.send(req.body.email);
 });
 
 module.exports = router;
