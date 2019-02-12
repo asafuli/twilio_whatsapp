@@ -12,7 +12,7 @@ router.post('/', async (req, res) => {
     { new: true },
     (err, doc) => {
       if (err) console.log(err);
-      console.log(doc);
+      console.log('Auth - findOneAndUpdate : ', doc);
     }
   );
   if (!dbUser) {
