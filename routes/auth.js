@@ -4,10 +4,6 @@ const { User } = require('../models/user');
 const express = require('express');
 const router = express.Router();
 
-router.options('/', (req, res) => {
-  console.log('----received OPTIONS');
-});
-
 router.post('/', (req, res) => {
   // let dbUser = await User.findOne({ resource: req.body.From });
   // if (!dbUser) {

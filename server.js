@@ -20,12 +20,8 @@ let corsOptions = {
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-// app.use(async (req, res, next) => {
-//   await next();
-//   res.setHeader('Access-Control-Allow-Origin', '*');
-// });
 app.use(cors(corsOptions));
-//app.use(cors());
+
 require('./startup/routes')(app);
 require('./startup/db')();
 
@@ -50,6 +46,7 @@ app.get('/user/:id', async (req, res) => {
 });
 
 app.post('/', async (req, res) => {
+  console.log('Recieved POST Request - : ', req);
   //---------DB-----------------//
   let dbUser;
   let dbMessage;
