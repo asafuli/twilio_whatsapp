@@ -15,7 +15,7 @@ router.post('/', async (req, res) => {
   //   dbUser = new User(_.pick(req.body, ['From', 'req.body.From']));
   //   await dbUser.save();
   // }
-  console.log('----received request', req);
+  console.log('----received request', req.body);
   res.sendStatus(200).send(req.body.email);
 });
 
