@@ -13,6 +13,18 @@ const userSchema = new mongoose.Schema({
     minlength: 5,
     maxlength: 50,
     unique: true
+  },
+  email: {
+    type: String,
+    required: false,
+    minlength: 2,
+    maxlength: 50
+  },
+  password: {
+    type: String,
+    required: false,
+    minlength: 5,
+    maxlength: 50
   }
   // isAdmin: Boolean
 });
