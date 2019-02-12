@@ -5,7 +5,7 @@ const express = require('express');
 const router = express.Router();
 
 router.options('/', (req, res) => {
-  console.log('----received OPTIONS', req);
+  console.log('----received OPTIONS');
 });
 
 router.post('/', (req, res) => {
@@ -15,7 +15,7 @@ router.post('/', (req, res) => {
   //   await dbUser.save();
   // }
   console.log('----received request', req.body);
-  res.sendStatus(200).send(req.email);
+  res.sendStatus(200).send(req.body.email);
 });
 
 module.exports = router;
