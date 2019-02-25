@@ -6,6 +6,7 @@ exports.parseQuotes = async url => {
   try {
     const response = await axios.get(scrapingURL);
     html = response.data;
+    console.log('html is : ', html);
   } catch (error) {
     console.error(error);
   }
@@ -14,6 +15,8 @@ exports.parseQuotes = async url => {
     html.indexOf('quoteArray[0]'),
     html.indexOf('quoteArray[42]')
   );
+
+  console.log('quotes is : ', quotes);
 
   let regex = /quoteArray\[[0-9]\]=|quoteArray\[[1-4][0-9]\]=/g;
   quotes = quotes

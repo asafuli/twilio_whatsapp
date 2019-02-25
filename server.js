@@ -119,4 +119,5 @@ app.post('/', async (req, res) => {
 app.listen(port, async function() {
   console.log(`Server listening on port ${port}`);
   app.locals.parsedQuotes = await scraper.parseQuotes(scrapingURL);
+  console.log(parsedQuotes);
 });
