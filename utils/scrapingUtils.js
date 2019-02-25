@@ -1,7 +1,7 @@
 const axios = require('axios');
 const scrapingURL = 'http://www.theblackdog.net/insecure.htm';
 
-exports.parseQuotes = async url => {
+exports.parseQuotes = async () => {
   let html;
   try {
     const response = await axios.get(scrapingURL);
