@@ -24,6 +24,6 @@ exports.parseQuotes = async url => {
 };
 
 exports.getRandomAdvice = function(parsedQuotes) {
-  console.log('CALLED GET RANDOM ADVICE');
+  console.log('CALLED GET RANDOM ADVICE', parsedQuotes);
   return parsedQuotes[Math.ceil(Math.random() * parsedQuotes.length) - 1];
 };
