@@ -32,8 +32,8 @@ const httpServer = app.listen(port, async function() {
 
 const io = require('socket.io')(httpServer);
 
-io.on('connect', socket => {
-  console.log('user connected');
+io.on('connection', socket => {
+  console.log('user connected', socket);
 });
 
 app.get('/user/:id', async (req, res) => {
