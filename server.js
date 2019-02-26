@@ -34,6 +34,9 @@ const io = require('socket.io')(httpServer);
 
 io.on('connection', socket => {
   console.log('user connected', socket);
+  socket.on('chat message', msg => {
+    io.emit('chat message', msg);
+  });
 });
 
 app.get('/user/:id', async (req, res) => {
