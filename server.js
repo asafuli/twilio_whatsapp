@@ -28,7 +28,6 @@ require('./startup/db')();
 const httpServer = app.listen(port, async function() {
   console.log(`Server listening on port ${port}`);
   app.locals.parsedQuotes = await scraper.parseQuotes();
-  console.log(parsedQuotes);
 });
 
 const io = require('socket.io')(httpServer);
