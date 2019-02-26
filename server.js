@@ -25,6 +25,18 @@ app.use(cors(corsOptions));
 require('./startup/routes')(app);
 require('./startup/db')();
 
+const httpServer = app.listen(port, async function() {
+  console.log(`Server listening on port ${port}`);
+  app.locals.parsedQuotes = await scraper.parseQuotes();
+  console.log(parsedQuotes);
+});
+
+const io = require('socket.io')(httpServer);
+
+io.on('connect', socket => {
+  console.log('user connected');
+});
+
 app.get('/user/:id', async (req, res) => {
   const message = await Message.findOne({ uid: req.params.id });
   const user = await User.findOne({ _id: req.params.id });
@@ -114,10 +126,4 @@ app.post('/', async (req, res) => {
   twiml.message(response);
   res.writeHead(200, { 'Content-Type': 'text/xml' });
   res.end(twiml.toString());
-});
-
-app.listen(port, async function() {
-  console.log(`Server listening on port ${port}`);
-  app.locals.parsedQuotes = await scraper.parseQuotes();
-  console.log(parsedQuotes);
 });
