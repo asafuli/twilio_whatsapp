@@ -33,8 +33,9 @@ const httpServer = app.listen(port, async function() {
 const io = require('socket.io')(httpServer);
 
 io.on('connection', socket => {
-  console.log('user connected', socket);
+  console.log('user connected');
   socket.on('chat message', msg => {
+    console.log('recieved msg', msg);
     io.emit('chat message', msg);
   });
 });
