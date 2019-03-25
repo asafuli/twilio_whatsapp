@@ -3,6 +3,7 @@ const { Chat } = require('../models/chat');
 const express = require('express');
 const router = express.Router();
 const cors = require('cors');
+const bodyParser = require('body-parser');
 
 let corsOptions = {
   credentials: true,
