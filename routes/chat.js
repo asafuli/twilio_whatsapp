@@ -17,7 +17,7 @@ router.use(bodyParser.json());
 router.use(cors(corsOptions));
 
 router.get('/', async (req, res) => {
-  const curDate = dateFormat(date.now(), 'isoDate');
+  const curDate = dateFormat(Date.now(), 'isoDate');
   const dbChat = await Chat.findOne({ curDate }, (err, doc) => {
     if (err) console.log(err);
     console.log('Chat - Get History - findOne : ', doc);
