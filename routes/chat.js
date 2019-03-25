@@ -16,6 +16,15 @@ router.use(bodyParser.urlencoded({ extended: false }));
 router.use(bodyParser.json());
 router.use(cors(corsOptions));
 
+router.get('/user/:id', async (req, res) => {
+  const curDate = dateFormat(date.now(), 'isoDate');
+  const dbChat = await Chat.findOne({ curDate }, (err, doc) => {
+    if (err) console.log(err);
+    console.log('Chat - Get History - findOne : ', doc);
+  });
+  return dbChat.messages;
+});
+
 router.post('/', async (req, res) => {
   const { resource, message } = req.body;
   let { timestamp } = req.body;
