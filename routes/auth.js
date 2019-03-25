@@ -4,7 +4,7 @@ const express = require('express');
 const router = express.Router();
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const { TWILIO_FE_URL } = require('./config/config');
+const { TWILIO_FE_URL } = require('../config/config');
 
 let corsOptions = {
   credentials: true,
