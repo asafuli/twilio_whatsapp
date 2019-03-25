@@ -17,8 +17,8 @@ router.use(bodyParser.json());
 router.use(cors(corsOptions));
 
 router.post('/', async (req, res) => {
-  const { resource, timestamp, message } = req.body;
-  let formattedTS = dateFormat(timestamp, 'YYYY:MM:DD');
+  const { resource, feTimestamp, message } = req.body;
+  let timestamp = dateFormat(feTimestamp, 'YYYY:MM:DD');
   let dbChat = await Chat.findOneAndUpdate(
     { formattedTS },
     { $set: { messages: [{ resource, message }] } },
@@ -29,7 +29,7 @@ router.post('/', async (req, res) => {
     }
   );
   if (!dbChat) {
-    dbChat = new Chat({ formattedTS, messages: [{ resource, message }] });
+    dbChat = new Chat({ timestamp, messages: [{ resource, message }] });
     console.log('Chat - findOneAndUpdate - New DB CHAT: ', dbChat);
     await dbChat.save();
   }
