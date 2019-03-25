@@ -4,10 +4,11 @@ const express = require('express');
 const router = express.Router();
 const cors = require('cors');
 const bodyParser = require('body-parser');
+const { TWILIO_FE_URL } = require('./config/config');
 
 let corsOptions = {
   credentials: true,
-  origin: true
+  origin: `${TWILIO_FE_URL}\\chat`
 };
 
 router.use(bodyParser.urlencoded({ extended: false }));
