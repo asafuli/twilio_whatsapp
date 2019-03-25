@@ -20,16 +20,22 @@ router.post('/', async (req, res) => {
   const { resource, message } = req.body;
   let { timestamp } = req.body;
   timestamp = dateFormat(timestamp, 'isoDate');
-  let dbChat = await Chat.findOneAndUpdate(
-    { timestamp },
-    { $set: { messages: [{ resource, message }] } },
-    { new: true },
-    (err, doc) => {
-      if (err) console.log(err);
-      console.log('Chat - findOneAndUpdate : ', doc);
-    }
-  );
-  if (!dbChat) {
+  let dbChat = await Chat.findOne({ timestamp }, (err, doc) => {
+    if (err) console.log(err);
+    console.log('Chat - findOneAndUpdate : ', doc);
+  });
+  if (dbChat) {
+    const currMessages = dbChat.messages;
+    dbChat = await Chat.findOneAndUpdate(
+      { timestamp },
+      { $set: { messages: [...currMessages, { resource, message }] } },
+      { new: true },
+      (err, doc) => {
+        if (err) console.log(err);
+        console.log('Chat - findOneAndUpdate : ', doc);
+      }
+    );
+  } else {
     dbChat = new Chat({ timestamp, messages: [{ resource, message }] });
     console.log('Chat - findOneAndUpdate - New DB CHAT: ', dbChat);
     await dbChat.save();
