@@ -4,12 +4,12 @@ const express = require('express');
 const router = express.Router();
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const dateformat = require('dateformat');
+const dateFormat = require('dateformat');
 const { TWILIO_FE_URL } = require('../config/config');
 
 let corsOptions = {
   credentials: true,
-  origin: `${TWILIO_FE_URL}/chat`
+  origin: true
 };
 
 router.use(bodyParser.urlencoded({ extended: false }));
