@@ -20,7 +20,7 @@ router.post('/', async (req, res) => {
 
   let dbChat = await Chat.findOneAndUpdate(
     { resource },
-    { $set: { messages: [...dbChat.messages, { resource, message }] } },
+    { $set: { messages: [...messages, { resource, message }] } },
     { new: true },
     (err, doc) => {
       if (err) console.log(err);
