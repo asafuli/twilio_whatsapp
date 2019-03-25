@@ -38,7 +38,6 @@ router.post('/', async (req, res) => {
     );
     console.log('Chat - findOneAndUpdate - New DB CHAT: ', dbChat);
     await dbChat.save();
-    res.status(200).send('Saved new Chat doc to DB :', dbChat);
   }
   console.log('----received request', req.body);
   res.send(dbChat);
