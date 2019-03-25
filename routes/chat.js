@@ -9,7 +9,7 @@ const { TWILIO_FE_URL } = require('../config/config');
 
 let corsOptions = {
   credentials: true,
-  origin: true
+  origin: `${TWILIO_FE_URL}`
 };
 
 router.use(bodyParser.urlencoded({ extended: false }));
@@ -19,7 +19,7 @@ router.use(cors(corsOptions));
 router.post('/', async (req, res) => {
   const { resource, message } = req.body;
   let { timestamp } = req.body;
-  timestamp = dateFormat(timestamp, 'YYYY:MM:DD');
+  timestamp = dateFormat(timestamp, 'isoDate');
   let dbChat = await Chat.findOneAndUpdate(
     { timestamp },
     { $set: { messages: [{ resource, message }] } },

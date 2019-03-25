@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 
 const chatScheme = new mongoose.Schema({
   timestamp: {
-    type: Date,
+    type: String,
     unique: true,
     required: true
   },
