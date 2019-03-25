@@ -17,10 +17,11 @@ router.use(bodyParser.json());
 router.use(cors(corsOptions));
 
 router.post('/', async (req, res) => {
-  const { resource, feTimestamp, message } = req.body;
-  let timestamp = dateFormat(feTimestamp, 'YYYY:MM:DD');
+  const { resource, message } = req.body;
+  let { timestamp } = req.body;
+  timestamp = dateFormat(timestamp, 'YYYY:MM:DD');
   let dbChat = await Chat.findOneAndUpdate(
-    { formattedTS },
+    { timestamp },
     { $set: { messages: [{ resource, message }] } },
     { new: true },
     (err, doc) => {
