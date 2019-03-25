@@ -29,13 +29,9 @@ router.post('/', async (req, res) => {
     }
   );
   if (!dbChat) {
-    dbChat = new Chat(
-      _.pick(
-        req.body,
-        ['timestamp', 'req.body.timestamp'],
-        [{ resource, message }]
-      )
-    );
+    dbChat = new Chat(_.pick(req.body, ['timestamp', 'req.body.timestamp']), [
+      { resource, message }
+    ]);
     console.log('Chat - findOneAndUpdate - New DB CHAT: ', dbChat);
     await dbChat.save();
   }
