@@ -8,7 +8,7 @@ const { TWILIO_FE_URL } = require('../config/config');
 
 let corsOptions = {
   credentials: true,
-  origin: `${TWILIO_FE_URL}\\chat`
+  origin: `${TWILIO_FE_URL}/chat`
 };
 
 router.use(bodyParser.urlencoded({ extended: false }));
@@ -29,9 +29,7 @@ router.post('/', async (req, res) => {
     }
   );
   if (!dbChat) {
-    dbChat = new Chat(_.pick(req.body, ['timestamp', 'req.body.timestamp']), [
-      { resource, message }
-    ]);
+    dbChat = new Chat({ timestamp, messages: [{ resource, message }] });
     console.log('Chat - findOneAndUpdate - New DB CHAT: ', dbChat);
     await dbChat.save();
   }

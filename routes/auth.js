@@ -8,7 +8,7 @@ const { TWILIO_FE_URL } = require('../config/config');
 
 let corsOptions = {
   credentials: true,
-  origin: `${TWILIO_FE_URL}\\login`
+  origin: `${TWILIO_FE_URL}/login`
 };
 
 router.use(bodyParser.urlencoded({ extended: false }));
