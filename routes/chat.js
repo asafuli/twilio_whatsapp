@@ -5,7 +5,7 @@ const router = express.Router();
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const dateFormat = require('dateformat');
-const { TWILIO_FE_URL } = require('../config/config');
+const { TWILIO_INC_NUM_LIST, TWILIO_FE_URL } = require('../config/config');
 
 let corsOptions = {
   credentials: true,
@@ -26,7 +26,7 @@ router.get('/', async (req, res) => {
 });
 
 router.post('/', async (req, res) => {
-  const { resource, message } = req.body;
+  const { resource, user, message } = req.body;
   let { timestamp } = req.body;
   timestamp = dateFormat(timestamp, 'isoDate');
   let dbChat = await Chat.findOne({ timestamp }, (err, doc) => {
@@ -37,7 +37,7 @@ router.post('/', async (req, res) => {
     const currMessages = dbChat.messages;
     dbChat = await Chat.findOneAndUpdate(
       { timestamp },
-      { $set: { messages: [...currMessages, { resource, message }] } },
+      { $set: { messages: [...currMessages, { resource, user, message }] } },
       { new: true },
       (err, doc) => {
         if (err) console.log(err);
@@ -45,7 +45,7 @@ router.post('/', async (req, res) => {
       }
     );
   } else {
-    dbChat = new Chat({ timestamp, messages: [{ resource, message }] });
+    dbChat = new Chat({ timestamp, messages: [{ resource, user, message }] });
     console.log('Chat - findOneAndUpdate - New DB CHAT: ', dbChat);
     await dbChat.save();
   }
