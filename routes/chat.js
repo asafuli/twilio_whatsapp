@@ -35,6 +35,7 @@ router.post('/', async (req, res) => {
         [{ resource, message }]
       )
     );
+    console.log('Chat - findOneAndUpdate - New DB CHAT: ', dbChat);
     await dbChat.save();
     res.status(400).send('Resource not found in DB', resource);
   }
