@@ -17,6 +17,7 @@ router.use(bodyParser.json());
 router.use(cors(corsOptions));
 
 router.get('/', async (req, res) => {
+  console.log(curDate);
   const curDate = dateFormat(Date.now(), 'isoDate');
   const dbChat = await Chat.findOne({ curDate }, (err, doc) => {
     if (err) console.log(err);
@@ -31,7 +32,7 @@ router.post('/', async (req, res) => {
   timestamp = dateFormat(timestamp, 'isoDate');
   let dbChat = await Chat.findOne({ timestamp }, (err, doc) => {
     if (err) console.log(err);
-    console.log('Chat - findOneAndUpdate : ', doc);
+    console.log('Chat - findOne : ', doc);
   });
   if (dbChat) {
     const currMessages = dbChat.messages;
