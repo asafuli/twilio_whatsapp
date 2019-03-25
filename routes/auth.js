@@ -2,6 +2,7 @@ const _ = require('lodash');
 const { User } = require('../models/user');
 const express = require('express');
 const router = express.Router();
+const cors = require('cors');
 
 let corsOptions = {
   credentials: true,
