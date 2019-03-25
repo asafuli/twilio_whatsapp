@@ -3,6 +3,15 @@ const { Chat } = require('../models/chat');
 const express = require('express');
 const router = express.Router();
 
+let corsOptions = {
+  credentials: true,
+  origin: true
+};
+
+router.use(bodyParser.urlencoded({ extended: false }));
+router.use(bodyParser.json());
+router.use(cors(corsOptions));
+
 router.post('/', async (req, res) => {
   const { resource, timestamp, message } = req.body;
   console.log('Chat - findOneAndUpdate : ', resource, timestamp, message);

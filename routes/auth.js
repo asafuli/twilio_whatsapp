@@ -3,6 +3,15 @@ const { User } = require('../models/user');
 const express = require('express');
 const router = express.Router();
 
+let corsOptions = {
+  credentials: true,
+  origin: true
+};
+
+router.use(bodyParser.urlencoded({ extended: false }));
+router.use(bodyParser.json());
+router.use(cors(corsOptions));
+
 router.post('/', async (req, res) => {
   const { email, password, resource } = req.body;
   let dbUser = await User.findOneAndUpdate(
