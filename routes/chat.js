@@ -6,7 +6,6 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const dateFormat = require('dateformat');
 const { TWILIO_FE_URL } = require('../config/config');
-const MessagingResponse = require('twilio').twiml.MessagingResponse;
 
 let corsOptions = {
   credentials: true,
