@@ -81,7 +81,7 @@ router.post('/', async (req, res) => {
       from: 'whatsapp:+14155238886',
       to: 'whatsapp:+972523689045'
     })
-    .then(message => console.log(message.sid))
+    .then(message => console.log('push message : ', message))
     .done();
 });
 
