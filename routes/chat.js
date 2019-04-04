@@ -52,26 +52,10 @@ router.post('/', async (req, res) => {
   console.log('----received request', req.body);
   res.send(dbChat);
 
-  //--------TWIML---------------//
-
-  // const twiml = new MessagingResponse();
-  // let response = '';
-  // const { resource, user, message } = req.body;
-  // //const message = req.body.Body;
-
-  // if (message) {
-  //   response = `${user} just posted a new chat message:
-  //     ${message}`;
-  // }
-  // console.log(response);
-  // twiml.message(response);
-  // res.writeHead(200, { 'Content-Type': 'text/xml' });
-  // res.end(twiml.toString());
-
   //---------twiml push notification--------//
 
   const accountSid = process.env.TWILIO_ACCOUNT_SID;
-  const authToken = process.env.TWILIO_AUTH_TOKEN;
+  const authToken = process.env.TWIsLIO_AUTH_TOKEN;
   const client = require('twilio')(accountSid, authToken);
 
   client.messages
